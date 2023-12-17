@@ -1,0 +1,1 @@
+* main.py: all preprocessing, training, tuning, and testing scripts. The document is commented with the individual sections.
