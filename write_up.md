@@ -1,4 +1,4 @@
-## Introduction {#introduction .unnumbered}
+## Introduction 
 
 In a world of continuous media and information, many of us rarely read
 over all of the article descriptions, let alone every article in their
@@ -18,7 +18,7 @@ given article. Since the model is dealing with the meaning of similar
 words, I predict that the models that associate more featrues together
 will do better.
 
-## Data {#data .unnumbered}
+## Data
 
 The data set I used was imported from Kaggle and created by the user
 Pedro Araujo Ribeiro (2023). It contained a list of 4,112 CNN articles
@@ -32,13 +32,13 @@ decided to focus on the five most frequent ones (' domestic alerts', '
 international alerts', ' continents and regions', ' brand safety-nsf
 sensitive', ' iab-business and finance').
 
-::: {#table:1}
+::: Table 1
 | Description                                                                                                                                                                                                                                                                                    | Keywords                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| South Korean President Yoon Suk Yeol warned on Wednesday that his country and its allies "will not stand idly by" if North Korea receives Russian help to boost its weapons of mass destruction -- just days after the leaders of the two nuclear-armed nations held a closely watched summit. | \['asia', **'brand safety-nsf sensitive'**, 'brand safety-nsf war and military', 'brand safety-nsf weapons', **'continents and regions'**, **'domestic alerts'**, 'domestic-international news', 'east asia', 'eastern europe', 'europe', 'government organizations - intl', 'military', 'military weapons', 'north korea', 'north korea nuclear development', 'nuclear weapons', 'political figures - intl', 'russia', 'russia-ukraine conflict', 'south korea', 'united nations', 'unrest', 'conflicts and war', 'vladimir putin', 'weapons and arms', 'weapons of mass destruction', 'yoon suk-yeol'\] |
-  : This is an example of one of the article's description and list of
-  keywords. Bolded are the 5 most common keyword occurrences.
-:::
+| South Korean President Yoon Suk Yeol warned on Wednesday that his country and its allies "will not stand idly by" if North Korea receives Russian help to boost its weapons of mass destruction -- just days after the leaders of the two nuclear-armed nations held a closely watched summit. | [\"asia\", **\"brand safety-nsf sensitive\"**, \"brand safety-nsf war and military\", \"brand safety-nsf weapons\", **\"continents and regions\"**, **\"domestic alerts\"**, \"domestic-international news\", \"east asia\", \"eastern europe\", \"europe\", \"government organizations - intl\", \"military\", \"military weapons\", \"north korea\", \"north korea nuclear development\", \"nuclear weapons\", \"political figures - intl\", \"russia\", \"russia-ukraine conflict\", \"south korea\", \"united nations\", \"unrest\", \"conflicts and war\", \"vladimir putin\", \"weapons and arms\", \"weapons of mass destruction\", \"yoon suk-yeol\"] |
+
+This is an example of one of the article's description and list of keywords. Bolded are the 5 most common keyword occurrences.
+::: 
 
 Since not all of the rows included these five keywords, the data needed
 to be further processes by determining whether to keep. Each row entry.
@@ -60,16 +60,16 @@ split into train/dev/test sets with an approximate 80, 10, 10 split. In
 the end there were 2,271 in train, 310 in dev, and 287 in test. with a
 total of 2,868 entries.
 
-## Dev Set Results {#dev-set-results .unnumbered}
+## Dev Set Results
 
 As previously mentioned, my model uses one-hot encoding for the labels,
 so I chose Logisitic Regression and Random Forest as the estimator for
 MultiOutputClassifier to generate binary classification for each label.
 The main hyperparameters I tuned are solver/C and max_features/max_n,
 respectively. To tune the models I looped through each solver in
-\[\"lbfgs\", \"liblinear\", \"newton-cg\", \"sag\", \"saga\"\] with C in
-\[100, 10, 1.0, 0.1, 0.01\] and each max_features in \[10, 100, 1000\]
-with max_n in \[1, 2, 3, \... 20\]. Since this is 25 and 60
+[\"lbfgs\", \"liblinear\", \"newton-cg\", \"sag\", \"saga\"] with C in
+[100, 10, 1.0, 0.1, 0.01] and each max_features in [10, 100, 1000]
+with max_n in [1, 2, 3, \... 20]. Since this is 25 and 60
 configurations respectively, I have only presented the top performers in
 Table [2](#table:2){reference-type="ref" reference="table:2"}. As seen
 in the table the optimized hyperparameters for the features were the
@@ -89,7 +89,7 @@ of features to be predicted I found that increasing the number of
 features increases this second accuracy, but lowers the sklearn
 accuracy_score and increases the processing time.
 
-::: {#table:2}
+::: Table 2
  
  | Model               | Features | Hyperparametes | Accuracy  |
  |---------------------|----------|----------------|-----------|
@@ -100,13 +100,13 @@ accuracy_score and increases the processing time.
  | Random Forest       | Bigram   | 1000/20        | 94.77     |
  |                     | Trigram  | 1000/20        | **96.86** |
 
-  : The best preforming hyperparameters from the dev set. For Logisitic
+  The best preforming hyperparameters from the dev set. For Logisitic
   Regression, the hyperparameters are represented as solver/C and, for
   Random Forest, the hyperparameters are represented as
   max_features/max_n.
 :::
 
-## Test Set Results {#test-set-results .unnumbered}
+## Test Set Results
 
 The test set results were less dependent of the given models despite
 having differing results in the Dev Set. As shown in Table
@@ -118,28 +118,26 @@ mentioned in the Dev Set Results section. As seen in Table
 [\[tabel:4\]](#tabel:4){reference-type="ref" reference="tabel:4"},
 unigrams still outperform the other features.
 
-::: {#table:3}
+::: Table 3
   | Model               | Features | Hyperparametes | Accuracy (\"one-match\" included) | Accuracy (\"one-match\" excluded) | Accuracy (\"exact-match\") |
 |---------------------|----------|----------------|-----------------------------------|-----------------------------------|----------------------------|
 |                     | Unigram  | saga/100       | **97.91**                         | 68.64                             | **40.42**                  |
 | Logistic Regression | Bigram   | saga/100       | 96.17                             | **69.34**                         | **37.63**                  |
 |                     | Trigram  | saga/100       | 95.12                             | 64.11                             | 34.15                      |
-|---------------------|----------|----------------|-----------------------------------|-----------------------------------|----------------------------|
 |                     | Unigram  | 1000/20        | **98.26**                         | 65.51                             | **38.33**                  |
 | Random Forest       | Bigram   | 1000/20        | 95.82                             | **63.41**                         | 32.4                       |
 |                     | Trigram  | 1000/20        | 96.17                             | 61.32                             | 29.27                      |
-|---------------------|----------|----------------|-----------------------------------|-----------------------------------|----------------------------|
 
-  : This is the results of using the same hyperparameters from the best
+  This is the results of using the same hyperparameters from the best
   dev test configuration. The accuracy is using all three metrics. For
   Logistic Regression, the hyperparameters are represented as solver/C
   and, for Random Forest, the hyperparameters are represented as
   max_features/max_n.
 :::
 
-::: {#table:4}
+::: Table 4
 | Model               | Features | Hyperparametes | Accuracy (\"one-match\" included) | Accuracy (\"one-match\" excluded) | Accuracy (\"exact-match\") |
-|---------------------|----------|----------------|-----------------------------------|-----------------------------------|----------------------------|
+|:---------------------:|----------|----------------|-----------------------------------|-----------------------------------|----------------------------|
 |                     | Unigram  | saga/100       | 95.82                             | 99.65                             | **12.89**                  |
 | Logistic Regression | Bigram   | saga/100       | 96.17                             | **100.0**                         | **12.89**                  |
 |                     | Trigram  | saga/100       | **96.86**                         | **100.0**                         | 11.85                      |
@@ -147,14 +145,14 @@ unigrams still outperform the other features.
 | Random Forest       | Bigram   | 1000/20        | 96.52                             | **100.0**                         | 8.71                       |
 |                     | Trigram  | 1000/20        | **96.86**                         | **100.0**                         | 8.36                       |
 
-  : This table is the model using 20 features intsead of 20. The models
+  This table is the model using 20 features intsead of 20. The models
   use the same hyperparameters from the best dev test configuration. The
   accuracy is all three metrics. For Logistic Regression, the
   hyperparameters are represented as solver/C and, for Random Forest,
   the hyperparameters are represented as max_features/max_n.
 :::
 
-## Discussion {#discussion .unnumbered}
+## Discussion
 
 Although the different models didn't behave that differently, the
 differing features did. This suggests that the frequency of each feature
@@ -171,7 +169,7 @@ increasing the number of labels increases the sparsity and the model has
 to be more cautious. That being said, the model performed well with
 identifying at least one of the keywords.
 
-## Conclusion {#conclusion .unnumbered}
+## Conclusion
 
 In summary, this project explores how well a machine learning model can
 predict which keywords are going to be used with a given article. The
